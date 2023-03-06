@@ -58,6 +58,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, ...options } = {}
         setLoading(true)
         setErrors([])
         setStatus(null)
+        let tload = toast.loading('Logging in...')
 
         await csrf()
 
@@ -70,10 +71,14 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, ...options } = {}
             .post('/auth/login', data)
             .then(() => {
                 setLoading(false)
+                toast.dismiss(tload)
+                toast.success("Logged in")
                 return mutate()
             })
             .catch(error => {
                 setLoading(false)
+                toast.dismiss(tload)
+                toast.error("Failed to login")
                 if (error.response.status !== 422) throw error
 
                 setErrors(error.response.data.errors)

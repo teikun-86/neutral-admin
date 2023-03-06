@@ -1,4 +1,5 @@
 import { useCountdown } from "@/hooks/countdown"
+import { axios } from "@/libs/axios"
 import { formatIDR, splitString, truncateString } from "@/util"
 import moment from "moment"
 import { useEffect, useState } from "react"
@@ -13,7 +14,8 @@ export const PackageReservationColumn = ({
     updateReservation,
     deleteReservation,
     checkPermission,
-    addPayment
+    addPayment,
+    reservationDetail
 }) => {
     const [reservation, setReservation] = useState(res)
     const { isExpired, timeLeft } = useCountdown(new Date(reservation.expired_at))
@@ -117,6 +119,11 @@ export const PackageReservationColumn = ({
                             <td>{formatIDR(reservation.amount_due)}</td>
                             <td>
                                 <div className="flex items-center space-x-2">
+                                    {
+                                        checkPermission('haji-umrah.hotel.reservation-read') && (
+                                            <button className="btn-light dark:btn-dark" onClick={() => reservationDetail(reservation)}>Detail</button>
+                                        )
+                                    }
                                     {
                                         checkPermission('haji-umrah.package.reservation-update') && (
                                             <button disabled={reservation.is_expired} className="btn-light dark:btn-dark" onClick={() => updateReservation(reservation)}>Update</button>

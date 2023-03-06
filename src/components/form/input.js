@@ -28,7 +28,7 @@ export const Input = ({
                 value={value}
                 placeholder={placeholder}
                 onChange={handleChange}
-                className={`mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:border-gray-500 dark:focus:border-gray-400 sm:text-sm bg-white dark:bg-gray-800 dark:text-white transition-all duration-200 !ring-0 !outline-none ${className}`}
+                className={type === 'file' ? className : `mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:border-gray-500 dark:focus:border-gray-400 sm:text-sm bg-white dark:bg-gray-800 dark:text-white transition-all duration-200 !ring-0 !outline-none ${className}`}
                 {...props}
             />
         </div>

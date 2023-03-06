@@ -15,7 +15,8 @@ export const HotelReservationColumn = ({
     updateReservation,
     deleteReservation,
     checkPermission,
-    addPayment
+    addPayment,
+    reservationDetail
 }) => {
     const [reservation, setReservation] = useState(res)
     const { isExpired, timeLeft } = useCountdown(new Date(reservation.expired_at))
@@ -98,6 +99,11 @@ export const HotelReservationColumn = ({
                 <td rowSpan={2}>{formatIDR(reservation.total_price)}</td>
                 <td rowSpan={2}>
                     <div className="flex items-center space-x-2">
+                        {
+                            checkPermission('haji-umrah.hotel.reservation-read') && (
+                                <button className="btn-light dark:btn-dark" onClick={() => reservationDetail(reservation)}>Detail</button>
+                            )
+                        }
                         {
                             checkPermission('haji-umrah.hotel.reservation-update') && (
                                 <button disabled={reservation.is_expired} className="btn-light dark:btn-dark" onClick={() => updateReservation(reservation)}>Update</button>

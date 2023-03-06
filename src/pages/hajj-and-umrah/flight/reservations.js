@@ -2,7 +2,7 @@ import { Dropdown } from "@/components/dropdown"
 import { useAuth } from "@/hooks/auth"
 import AppLayout from "@/layouts/app"
 import { axios } from "@/libs/axios"
-import { formatIDR, searchString, splitString, truncateString } from "@/util"
+import { config, formatIDR, searchString, splitString, truncateString } from "@/util"
 import { ArrowRightIcon, ArrowsRightLeftIcon, ArrowTopRightOnSquareIcon, CalendarDaysIcon, ChevronDownIcon, MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/24/outline"
 import moment from "moment"
 import Image from "@/components/image"
@@ -28,12 +28,15 @@ const Reservations = () => {
     const [reservation, setReservation] = useState(null)
     const [loading, setLoading] = useState(false)
     const [deleting, setDeleting] = useState(false)
+    const [validating, setValidating] = useState(false)
     const [selected, setSelected] = useState([])
     const [toDelete, setToDelete] = useState([])
     const [orderBy, setOrderBy] = useState({
         column: 'created_at',
         direction: 'asc'
     })
+
+    const [toValidate, setToValidate] = useState(null)
 
     const queriedReservations = query.trim().length === 0 ? reservations : reservations.filter(reservation => {
         return searchString(query, reservation.company.name)
@@ -136,6 +139,29 @@ const Reservations = () => {
     const addPayment = (res) => {
         setReservation(res)
         setModalState('createFlightReservationPaymentModal')
+    }
+
+    const validatePayment = (code) => {
+        setToValidate(code)
+        setModalState('validateFlightReservationPaymentModal')
+    }
+
+    const doValidatePayment = async () => {
+        console.log({
+            toValidate
+        });
+        setValidating(true)
+        await axios.post("/payment/validate", {
+            payment_code: toValidate
+        }).then(res => {
+            setValidating(false)
+            setModalState('')
+            toast.success(res.data.message)
+            getReservations()
+        }).catch(err => {
+            setValidating(false)
+            toast.error(err.response.data.message)
+        })
     }
 
     useEffect(() => {
@@ -439,6 +465,7 @@ const Reservations = () => {
                                                                                 <th>Paid At</th>
                                                                                 <th>Status</th>
                                                                                 <th>Amount</th>
+                                                                                <th></th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -463,6 +490,13 @@ const Reservations = () => {
                                                                                         <td>{moment(payment.created_at).format('DD MMMM YYYY')}</td>
                                                                                         <td className="capitalize">{payment.status}</td>
                                                                                         <td className="text-end">{formatIDR(payment.amount)}</td>
+                                                                                        <td>
+                                                                                            {
+                                                                                                payment.status === 'unpaid' && (
+                                                                                                    <button className="btn-light dark:btn-dark" onClick={() => validatePayment(payment.payment_code)}>Validate</button>
+                                                                                                )
+                                                                                            }
+                                                                                        </td>
                                                                                     </tr>
                                                                                 ))
                                                                             }
@@ -542,6 +576,33 @@ const Reservations = () => {
                                 setModalState('')
                             }}>Cancel</button>
                             <button className="btn-rose" onClick={deleteReservations}>Delete</button>
+                        </Modal.Footer>
+                    </Modal>
+                )
+            }
+
+            {
+                checkPermission('haji-umrah.flight.reservation-add-payment') && toValidate !== null && (
+                    <Modal id="validateFlightReservationPaymentModal" static size="md">
+                        {
+                            validating && (
+                                <div className="absolute z-50 inset-0 bg-white/50 dark:bg-gray-900/50 grid place-items-center w-full h-full">
+                                    <Loader className="w-10 h-10 text-rose-600" />
+                                </div>
+                            )
+                        }
+                        <Modal.Header>
+                            <Modal.Title>Validate Reservation Payment</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p className="text-gray-900 dark:text-white font-medium">Are you sure want to validate payment with code <code>{toValidate}</code> </p>
+                        </Modal.Body>
+                        <Modal.Footer className="flex items-center justify-end space-x-2">
+                            <button className="btn-text" onClick={() => {
+                                setToValidate(null)
+                                setModalState('flightReservationDetailModal')
+                            }}>Cancel</button>
+                            <button className="btn-rose" onClick={doValidatePayment}>Validate</button>
                         </Modal.Footer>
                     </Modal>
                 )

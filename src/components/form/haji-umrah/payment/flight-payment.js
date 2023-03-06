@@ -42,8 +42,8 @@ export const FlightPayment = ({ reservation, refetch, setReservation }) => {
         setMessage(null)
         setErrors({})
         let transformed = {
-            reservation_id: reservation.id,
-            payment_method: data.payment_method.code,
+            id: reservation.id,
+            payment_method_code: data.payment_method.code,
             amount: data.amount
         }
         await axios.post("/hajj-umrah/flights/reservations/add-payment", transformed).then(res => {
@@ -122,7 +122,7 @@ export const FlightPayment = ({ reservation, refetch, setReservation }) => {
                                     </Combobox.Options>
                                 </Combobox.Container>
                             </Combobox>
-                            <InputError messages={errors.payment_method} />
+                            <InputError messages={errors.payment_method_code} />
                         </div>
                         <div className="w-full p-2">
                             <Input type="number" value={data.amount} label="Amount" onChange={(e) => handleChange('amount', e.target.value)} max={reservation.amount_due} min={0} />

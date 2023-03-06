@@ -156,3 +156,5 @@ export const objectExceptKeys = (obj, ...keys) => {
     });
     return newObj;
 }
+
+export const basename = (path) => path.split('/').reverse()[0];

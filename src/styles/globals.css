@@ -43,4 +43,8 @@ body {
     .btn-rose {
         @apply text-sm cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed inline-flex justify-center items-center rounded-lg border border-transparent shadow-sm px-3 py-2 bg-rose-600 md:text-base font-medium text-white hover:bg-rose-700 focus:bg-rose-700 focus:outline-none sm:w-auto sm:text-sm transition duration-100;
     }
+
+    input[type="file"] {
+        @apply cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed block w-full text-sm text-gray-600 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-rose-500 file:text-rose-50 hover:file:bg-rose-700 file:cursor-pointer outline-none focus:outline-none;
+    }
 }

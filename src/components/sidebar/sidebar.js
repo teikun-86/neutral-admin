@@ -1,5 +1,5 @@
 import { config, setTheme, splitString, truncateString } from "@/util"
-import { ArrowLeftIcon, ArrowLeftOnRectangleIcon, BuildingOfficeIcon, CheckIcon, ChevronRightIcon, ComputerDesktopIcon, HomeIcon, MoonIcon, PaperAirplaneIcon, QueueListIcon, RectangleStackIcon, SunIcon, UserCircleIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftIcon, ArrowLeftOnRectangleIcon, BuildingOfficeIcon, CheckIcon, ComputerDesktopIcon, HomeIcon, MoonIcon, PaperAirplaneIcon, QueueListIcon, RectangleStackIcon, ShieldCheckIcon, SunIcon, UserCircleIcon, UserGroupIcon } from "@heroicons/react/24/outline"
 import Image from "@/components/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -11,7 +11,7 @@ import { Title } from "./title"
 export const Sidebar = ({ user, logout, checkPermission, setSidebarOpen, sidebarOpen }) => {
     const router = useRouter()
 
-    const isAbleTo = (permission) => checkPermission(Array.isArray(permission) ? permission : [permission])
+    const isAbleTo = (...permission) => checkPermission(Array.isArray(permission) ? permission : [permission])
     
     return (
         <div className="w-full min-h-screen max-h-screen bg-white dark:bg-gray-900 shadow">
@@ -116,6 +116,26 @@ export const Sidebar = ({ user, logout, checkPermission, setSidebarOpen, sidebar
                                     </>
                                 )
                             }
+                            {
+                                isAbleTo('users-read', 'roles-read') && (
+                                    <>
+                                        <Title>Users</Title>
+                                        {
+                                            isAbleTo('users-read') && (
+                                                <Item active={router.pathname === '/users'} href="/users">
+                                                    <UserGroupIcon className="w-5 h-5 opacity-30 group-hover:opacity-50 group-focus:opacity-60 group-active:opacity-70 mr-2" />
+                                                    <span>Users</span>
+                                                </Item>
+                                            )
+                                        }
+                                    </>
+                                )
+                            }
+                            <Title>Misc</Title>
+                            <Item active={router.pathname === '/misc/airlines'} href="/misc/airlines">
+                                <PaperAirplaneIcon className="w-5 h-5 opacity-30 group-hover:opacity-50 group-focus:opacity-60 group-active:opacity-70 mr-2 -rotate-[30deg]" />
+                                <span>Airlines</span>
+                            </Item>
                         </>
                     )
                 }

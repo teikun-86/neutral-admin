@@ -211,13 +211,22 @@ export const UpdateHotel = ({
                                 <InputError messages={errors.room_detail} />
                             </div>
                         </div>
-                        <div className="w-full lg:w-1/2 p-2">
+                        <div className="w-full lg:w-1/2 xl:w-1/3 p-2">
                             <div className="mb-3">
                                 <Input type="number" value={data.packages_available} label="Packages Available" onChange={(e) => handleChange('packages_available', e.target.value)} required min={1} />
                                 <InputError messages={errors.packages_available} />
                             </div>
                         </div>
-                        <div className="w-full lg:w-1/2 p-2">
+                        <div className="w-full lg:w-1/2 xl:w-1/3 p-2">
+                            <div className="mb-3">
+                                <Options name="program_type" onChange={(e) => handleChange('program_type', e.target.value)} label="Program Type">
+                                    <Options.Option selected={data.program_type === "9"} value="9">9 Days</Options.Option>
+                                    <Options.Option selected={data.program_type === "12"} value="12">12 Days</Options.Option>
+                                </Options>
+                                <InputError messages={errors.program_type} />
+                            </div>
+                        </div>
+                        <div className="w-full xl:w-1/3 p-2">
                             <div className="mb-3">
                                 <Input type="number" value={data.price_per_package} label="Price/package" onChange={(e) => handleChange('price_per_package', e.target.value)} required min={1} />
                                 <small className="text-gray-600 dark:text-gray-400 text-xs font-medium">{formatIDR(data.price_per_package)}</small>
